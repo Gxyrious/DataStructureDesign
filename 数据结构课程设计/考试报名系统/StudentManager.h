@@ -2,6 +2,7 @@
 #include<iostream>
 #include"LinkedList.hpp"
 #include"StudentModel.h"
+
 class StudentManager
 {
 public:
@@ -16,5 +17,5 @@ public:
 	void updateStudentId();
 	void run();
 private:
-	List<Student> stuList;
+	LinkedList<Student> stuList;
 };

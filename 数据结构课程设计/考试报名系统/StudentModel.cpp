@@ -1,7 +1,7 @@
 #include "StudentModel.h"
 
-Student::Student(int id, int num, string name, char sex, short int age) :
-	_id(id), _number(num), _name(name), _sex(sex), _age(age) {}
+Student::Student(int id, int num, string name, char sex, short int age,string category) :
+	_id(id), _number(num), _name(name), _sex(sex), _age(age),_category(category){}
 
 int Student::getId() const
 {
@@ -26,6 +26,11 @@ char Student::getSex() const
 int Student::getAge() const
 {
 	return _age;
+}
+
+string Student::getCategory() const
+{
+	return _category;
 }
 
 void Student::setId(int id)
@@ -53,21 +58,26 @@ void Student::setAge(short int age)
 	_age = age;
 }
 
+void Student::setCategory(string category)
+{
+	_category = category;
+}
+
 ostream& operator<<(ostream& output, const Student& stu)
 {
 	cout << stu.getId() << " " << stu.getNumber()
 		<< " " << stu.getName() << " " << stu.getSex()
-		<< " " << stu.getAge();
+		<< " " << stu.getAge()<<" "<<stu.getCategory();
 	return output;
 }
 
 istream& operator>>(istream& input, Student& stu)
 {
 	int number;
-	string name;
+	string name, category;
 	char sex;
 	short int age;
-	cin >> number >> name >> sex >> age;
-	stu = Student(-1, number, name, sex, age);
+	cin >> number >> name >> sex >> age>> category;
+	stu = Student(-1, number, name, sex, age, category);
 	return input;
 }

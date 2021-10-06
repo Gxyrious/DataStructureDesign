@@ -19,10 +19,16 @@ void StudentManager::insertStudent()
 		cout << "输入有误！" << endl;
 	}
 	else {
-		cout << "请依次输入各考生的考号、姓名、性别、年龄" << endl;
+		cout << "请依次输入各考生的考号、姓名、性别、年龄、报考类别：" << endl;
 		for (int i = 1; i <= n; i++) {
 			Student stu;
 			cin >> stu;
+			for (LinkNode<Student>* iter = stuList.getHead()->_next; iter; iter = iter->_next) {
+				if (iter->_data.getNumber() == stu.getNumber()) {
+					cout << "考生考号有重复，异常退出！" << endl;
+					return;
+				}
+			}
 			if (!stuList.push_back(stu)) {
 				cout << "第" << i << "个考生插入失败！" << endl;
 				return;
@@ -65,25 +71,21 @@ void StudentManager::modifyStudent()
 
 void StudentManager::removeStudent()
 {
-	cout << "请输入要删除的考生考号：" << endl;
+	cout << "请输入要删除的考生编号：" << endl;
 	int id;
 	cin >> id;
 	LinkNode<Student>* pre = stuList.Locate(id - 1);
-	if (!pre || !(pre->_next)) {
-		cout << "删除失败，不存在这名考生！" << endl;
+	if (!stuList.Remove(id)) {
+		cout << "删除失败！" << endl;
 	}
 	else {
-		LinkNode<Student>* tar = pre->_next;
-		pre->_next = tar->_next;
-		delete tar;
 		cout << "删除成功！" << endl;
 	}
 }
 
 void StudentManager::printStudent()
 {
-	stuList.PrintList();
-	LinkNode<Student>* cur = stuList.getHead();
+	LinkNode<Student>* cur = stuList.getHead()->_next;
 	while (cur) {
 		cout << cur->_data << endl;
 		cur = cur->_next;
@@ -104,6 +106,7 @@ void StudentManager::run()
 {
 	cout << "首先请建立考生信息系统！" << endl;
 	insertStudent();
+	updateStudentId();
 	int opeNum;
 	do {
 		PrintInterFace();
