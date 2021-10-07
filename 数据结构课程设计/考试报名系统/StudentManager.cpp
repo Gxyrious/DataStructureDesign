@@ -10,13 +10,49 @@ void StudentManager::PrintInterFace()
 		<< "-----------------------" << endl;
 }
 
+void StudentManager::createSystem()
+{
+	cout << "首先请建立考生信息系统！" << endl
+		<< "请输入要添加的考生个数：" << endl;
+	int n;
+	cin >> n;
+	while (n <= 0) {
+		cout << "输入有误，请重新输入！" << endl;
+		cin >> n;
+	}
+	cout << "请依次输入各考生的考号、姓名、性别、年龄、报考类别：" << endl;
+
+	//匿名函数，用来判断是否考生考号重复
+	auto ifRepeat = [&](Student& stu)->bool {
+		for (LinkNode<Student>* iter = stuList.getHead()->_next; iter; iter = iter->_next) {
+			if (iter->_data.getNumber() == stu.getNumber()) { return false; }
+		}
+		return true; };
+
+	for (int i = 1; i <= n; i++) {
+		Student stu;
+		cin >> stu;
+		while (!ifRepeat(stu)) {
+			//保证考号重复的时候不异常退出，能够紧接着继续添加学生
+			cout << "考生考号有重复，请重新输入该考生信息！" << endl;
+			cin >> stu;
+		}
+		if (!stuList.PushBack(stu)) {
+			cout << "第" << i << "个考生插入失败！" << endl;
+			//在创建系统的时候，即使添加失败，也继续添加
+		}
+	}
+	updateStudentId();
+	cout << "建立成功！" << endl;
+}
+
 void StudentManager::insertStudent()
 {
 	cout << "请输入要添加的考生个数" << endl;
 	int n;
 	cin >> n;
 	if (n <= 0) {
-		cout << "输入有误！" << endl;
+		cout << "输入有误，异常退出！" << endl;
 	}
 	else {
 		cout << "请依次输入各考生的考号、姓名、性别、年龄、报考类别：" << endl;
@@ -29,12 +65,13 @@ void StudentManager::insertStudent()
 					return;
 				}
 			}
-			if (!stuList.push_back(stu)) {
+			if (!stuList.PushBack(stu)) {
 				cout << "第" << i << "个考生插入失败！" << endl;
-				return;
+			}
+			else {
+				cout << "第" << i << "个考生插入成功！" << endl;
 			}
 		}
-		cout << "插入成功！" << endl;
 	}
 }
 
@@ -45,10 +82,10 @@ void StudentManager::pollStudent()
 	cin >> id;
 	LinkNode<Student>* tar = stuList.Locate(id);
 	if (!id || !tar) {
-		cout << "不存在这名考生！" << endl;
+		cout << "不存在这名考生，异常退出！" << endl;
 	}
 	else {
-		cout << "查询成功！" << endl << tar->_data << endl;
+		cout << "查询成功，该学生的信息：" << endl << tar->_data << endl;
 	}
 }
 
@@ -86,9 +123,14 @@ void StudentManager::removeStudent()
 void StudentManager::printStudent()
 {
 	LinkNode<Student>* cur = stuList.getHead()->_next;
-	while (cur) {
-		cout << cur->_data << endl;
-		cur = cur->_next;
+	if (!cur) {
+		cout << "考生人数为零！" << endl;
+	}
+	else {
+		while (cur) {
+			cout << cur->_data << endl;
+			cur = cur->_next;
+		}
 	}
 }
 
@@ -104,9 +146,7 @@ void StudentManager::updateStudentId()
 
 void StudentManager::run()
 {
-	cout << "首先请建立考生信息系统！" << endl;
-	insertStudent();
-	updateStudentId();
+	createSystem();
 	int opeNum;
 	do {
 		PrintInterFace();
@@ -126,6 +166,13 @@ void StudentManager::run()
 		else if (opeNum == 5) {
 			printStudent();
 		}
+		else if (opeNum == 0) {
+			break;
+		}
+		else {
+			cout << "操作码不存在，请重新输入！" << endl;
+			continue;
+		}
 		updateStudentId();
-	} while (opeNum != 0);
+	} while (true);
 }

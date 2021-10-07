@@ -57,7 +57,7 @@ public:
 	}
 	
 	//在链表末尾添加结点
-	bool push_back(T& t) {
+	bool PushBack(T& t) {
 		LinkNode<T>* cur = Locate(_length);
 		if (!cur) {
 			return false;
@@ -73,7 +73,7 @@ public:
 		return true;
 	}
 
-	//移除结点
+	//删除结点
 	bool Remove(int pos) {
 		LinkNode<T>* cur = Locate(pos - 1);
 		if (!cur || !(cur->_next)) {
