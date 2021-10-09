@@ -22,7 +22,7 @@ void StudentManager::createSystem()
 	}
 	cout << "请依次输入各考生的考号、姓名、性别、年龄、报考类别：" << endl;
 
-	//匿名函数，用来判断是否考生考号重复
+	//使用匿名函数来定义，用来判断是否考生考号重复
 	auto ifRepeat = [&](Student& stu)->bool {
 		for (LinkNode<Student>* iter = stuList.getHead()->_next; iter; iter = iter->_next) {
 			if (iter->_data.getNumber() == stu.getNumber()) { return false; }
@@ -33,7 +33,7 @@ void StudentManager::createSystem()
 		Student stu;
 		cin >> stu;
 		while (!ifRepeat(stu)) {
-			//保证考号重复的时候不异常退出，能够紧接着继续添加学生
+			//保证考号重复的时候不异常退出，能够紧接着继续添加考生
 			cout << "考生考号有重复，请重新输入该考生信息！" << endl;
 			cin >> stu;
 		}
@@ -42,6 +42,7 @@ void StudentManager::createSystem()
 			//在创建系统的时候，即使添加失败，也继续添加
 		}
 	}
+	//更新考生id
 	updateStudentId();
 	cout << "建立成功！" << endl;
 }
@@ -59,12 +60,15 @@ void StudentManager::insertStudent()
 		for (int i = 1; i <= n; i++) {
 			Student stu;
 			cin >> stu;
+			//若考生考号重复，直接退出当前操作步骤
+			//前面已经输入的考生信息保留
 			for (LinkNode<Student>* iter = stuList.getHead()->_next; iter; iter = iter->_next) {
 				if (iter->_data.getNumber() == stu.getNumber()) {
 					cout << "考生考号有重复，异常退出！" << endl;
 					return;
 				}
 			}
+			//输出是否成功
 			if (!stuList.PushBack(stu)) {
 				cout << "第" << i << "个考生插入失败！" << endl;
 			}
@@ -94,6 +98,7 @@ void StudentManager::modifyStudent()
 	cout << "请输入要修改的考生编号：" << endl;
 	int id;
 	cin >> id;
+	//先使用id定位考生
 	LinkNode<Student>* tar = stuList.Locate(id);
 	if (!id || !tar) {
 		cout << "不存在这名考生！" << endl;
@@ -111,6 +116,7 @@ void StudentManager::removeStudent()
 	cout << "请输入要删除的考生编号：" << endl;
 	int id;
 	cin >> id;
+	//先使用id定位考生
 	LinkNode<Student>* pre = stuList.Locate(id - 1);
 	if (!stuList.Remove(id)) {
 		cout << "删除失败！" << endl;
@@ -123,6 +129,7 @@ void StudentManager::removeStudent()
 void StudentManager::printStudent()
 {
 	LinkNode<Student>* cur = stuList.getHead()->_next;
+	//若附加头结点指向NULL，则说明考生信息系统为空
 	if (!cur) {
 		cout << "考生人数为零！" << endl;
 	}
@@ -136,6 +143,7 @@ void StudentManager::printStudent()
 
 void StudentManager::updateStudentId()
 {
+	//遍历一遍链表，按序修改编号
 	LinkNode<Student>* iter = stuList.getHead()->_next;
 	int id = 1;
 	while (iter != NULL) {

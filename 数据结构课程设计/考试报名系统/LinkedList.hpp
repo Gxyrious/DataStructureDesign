@@ -3,6 +3,7 @@
 
 using namespace std;
 
+//链表结点类
 template<class T>
 class LinkNode {
 public:
@@ -11,6 +12,7 @@ public:
 	LinkNode<T>* _next;//下一结点
 };
 
+//链表类
 template <class T>
 class LinkedList {
 public:
@@ -23,7 +25,7 @@ public:
 		delete _first;
 	}
 	
-	//清空链表
+	//清空链表，依次删除
 	void Erase() {
 		LinkNode<T>* cur;
 		while (_first->_next) {
@@ -44,7 +46,7 @@ public:
 		return _first;
 	}
 
-	//定位
+	//定位第pos个元素
 	LinkNode<T>* Locate(int pos) {
 		if (pos < 0) {
 			return NULL;
@@ -58,31 +60,35 @@ public:
 	
 	//在链表末尾添加结点
 	bool PushBack(T& t) {
-		LinkNode<T>* cur = Locate(_length);
+		LinkNode<T>* cur = Locate(_length);//定位链表末尾结点
 		if (!cur) {
 			return false;
 		}
-		LinkNode<T>* newNode = new LinkNode<T>;
+		LinkNode<T>* newNode = new LinkNode<T>;//创建要添加的结点
 		if (!newNode) {
 			return false;
 		}
+		//添加结点核心代码
 		newNode->_data = t;
 		newNode->_next = cur->_next;
 		cur->_next = newNode;
-		_length++;
+		//添加结点核心代码
+		_length++;//更新链表长度
 		return true;
 	}
 
 	//删除结点
 	bool Remove(int pos) {
-		LinkNode<T>* cur = Locate(pos - 1);
+		LinkNode<T>* cur = Locate(pos - 1);//先定位要删除的结点
 		if (!cur || !(cur->_next)) {
 			return false;
 		}
+		//核心删除代码
 		LinkNode<T>* tar = cur->_next;
 		cur->_next = tar->_next;
 		delete tar;
-		_length--;
+		//核心删除代码
+		_length--;//更新链表长度
 		return true;
 	}
 private:

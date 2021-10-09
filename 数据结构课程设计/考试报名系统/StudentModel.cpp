@@ -1,5 +1,6 @@
 #include "StudentModel.h"
 
+//构造函数
 Student::Student(int id, int num, string name, char sex, short int age,string category) :
 	_id(id), _number(num), _name(name), _sex(sex), _age(age),_category(category){}
 
@@ -63,6 +64,7 @@ void Student::setCategory(string category)
 	_category = category;
 }
 
+//输出重载
 ostream& operator<<(ostream& output, const Student& stu)
 {
 	cout << stu.getId() << " " << stu.getNumber()
@@ -71,6 +73,7 @@ ostream& operator<<(ostream& output, const Student& stu)
 	return output;
 }
 
+//输入重载
 istream& operator>>(istream& input, Student& stu)
 {
 	int number;
