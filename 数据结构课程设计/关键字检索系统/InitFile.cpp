@@ -5,6 +5,7 @@ InitFile::InitFile()
 	_input = "";
 	cout << "请输入文件名（默认情况下为Default.txt）：";
 	getline(cin, _input);
+	//如果输入换行，则_input仍为""
 	_name = (_input == "" ? "Default.txt" : _input);
 	_fout.open(_name, ios::out /*| ios::app*/);
 }

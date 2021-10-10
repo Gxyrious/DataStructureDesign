@@ -10,7 +10,7 @@ int main() {
 	init_file.InputText();
 
 	string keyword;
-	cout << "请输入要检索的关键词：" << endl;
+	cout << "请输入要检索的关键字：" << endl;
 	cin >> keyword;
 	transform(keyword.begin(), keyword.end(), keyword.begin(), std::tolower);//全部转为小写
 
