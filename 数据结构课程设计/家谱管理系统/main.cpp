@@ -1,8 +1,21 @@
 #include<iostream>
 #include<string>
 #include"Tree.hpp"
+
 using namespace std;
+
 Tree<string> family_tree;
+
+void PrintInterface() {
+	cout << "请选择要执行的操作：\n"
+		<< "A：组建新的家庭（需包含新的父或母以及它们的若干子女）\n"
+		<< "B：添加子女（需给定添加子女的父或母）\n"
+		<< "C：解散家庭（删除它及其所有子孙）\n"
+		<< "D：更改姓名（需给定原来的姓名）"
+		<< "P：前序遍历打印家族成员\n"
+		<< "E：退出程序\n";
+}
+
 int main() {
 	char c = char();
 	cout << "首先建立一个家谱！" << endl;
@@ -11,18 +24,8 @@ int main() {
 	cin >> ancestor;
 	family_tree.setRoot(ancestor);
 	cout << "此家谱的祖先是：" << family_tree.getRoot()->_data << endl;
-	while (true)
-	{
-		cout << "请选择要执行的操作：\n"
-			<< "A：组建新的家庭（需包含新的父或母以及它们的若干子女）\n"
-			<< "B：添加子女（需给定添加子女的父或母）\n"
-			<< "C：解散家庭（删除它及其所有子孙）\n"
-			<< "D：更改姓名（需给定原来的姓名）"
-			<< "P1：前序遍历打印家族成员\n"
-			<< "P2：中序遍历打印家族成员\n"
-			<< "P3：后序遍历打印家族成员\n"
-			<< "E:退出程序\n";
-
+	PrintInterface();
+	while (true) {
 		cin >> c;
 		if (c == 'A') {
 			cout << "请输入要建立家庭的人的姓名：";
@@ -61,11 +64,6 @@ int main() {
 			else {
 				cout << "未知原因，建立失败！" << endl;
 			}
-			//测试
-			//for (TreeNode<string>* iter = insert_data; iter != NULL; iter = iter->_brother) {
-			//	cout << iter->_data << endl;
-			//}
-
 		}
 		else if (c == 'B') {//插入某人的n个子女
 			cout << "请输入要添加儿子（或女儿）的人的姓名：";
@@ -110,9 +108,14 @@ int main() {
 				cout << "无法删除祖先！" << endl;
 				continue;
 			}
-			if (tar != family_tree.getRoot()) {
+			else if (tar == NULL) {
+				cout << "要删除的结点不存在！" << endl;
+				continue;
+			}
+			else {
 				TreeNode<string>* par = tar->_parent;
 				if (par->_firstson == tar) {
+					//要删除的结点是firstson，需要特殊处理连接
 					par->_firstson = tar->_brother;
 				}
 				else {
@@ -128,6 +131,21 @@ int main() {
 				cout << "未知原因，解散失败！" << endl;
 			}
 		}
+		else if (c == 'D') {
+			cout << "请输入要更改的人的姓名：" << endl;
+			string name;
+			cin >> name;
+			TreeNode<string>* tar = family_tree.search(family_tree.getRoot(), name);
+			if (tar == NULL) {
+				cout << "此人不在家谱中！" << endl;
+				continue;
+			}
+			else {
+				cout << "请输入更改后的姓名：" << endl;
+				cin >> tar->_data;
+				cout << "修改成功！" << endl;
+			}
+		}
 		else if (c == 'P') {
 			family_tree.PreOrder(family_tree.getRoot());
 			cout << endl;
@@ -140,8 +158,5 @@ int main() {
 			cout << "请输入正确的操作代码" << endl;
 		}
 	}
-
-	//测试插入树
-	family_tree.PreOrder(family_tree.getRoot());
 	return 0;
 }

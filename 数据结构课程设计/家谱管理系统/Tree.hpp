@@ -6,7 +6,7 @@ template<class T>
 class TreeNode {
 public:
 	TreeNode() { _data = T(); _brother = NULL; _parent = NULL; _firstson = NULL; }
-	TreeNode(T& data) { TreeNode(); _data = data; }
+	TreeNode(T& data) :_brother(NULL), _parent(NULL), _firstson(NULL) { _data = data; }
 	T _data;
 	TreeNode<T>* _brother;//兄弟结点，构成链表
 	TreeNode<T>* _parent;
@@ -19,10 +19,7 @@ class Tree {
 public:
 	Tree() { _root = NULL; }
 	Tree(T& rootdata) { _root = new TreeNode<T>(rootdata); }
-	//Tree(TreeNode<T>* root = NULL) :_root(root) {}
-	~Tree() {
-		Remove(_root);
-	}
+	~Tree() { Remove(_root); }
 	bool setRoot(T& data) {
 		//根结点，brother parent firstson都是NULL，目前只有数据
 		if (_root != NULL) {
@@ -44,6 +41,7 @@ public:
 		if (tar == NULL || firstson == NULL) {
 			return false;
 		}
+		//将所有子女结点的parent指针全部置成父结点
 		for (TreeNode<T>* iter = firstson; iter != NULL; iter = iter->_brother) {
 			iter->_parent = tar;
 		}
@@ -53,8 +51,7 @@ public:
 		}
 		else {
 			tar = tar->_firstson;
-			while (tar->_brother != NULL)
-				tar = tar->_brother;
+			while (tar->_brother != NULL) { tar = tar->_brother; }
 			tar->_brother = firstson;
 		}
 		return true;
@@ -85,7 +82,6 @@ public:
 		}
 		return NULL;//找不到
 	}
-
 	void PreOrder(TreeNode<T>* cur) {
 		if (cur == NULL)return;
 		else cout << cur->_data << " ";
@@ -93,7 +89,6 @@ public:
 		PreOrder(cur->_brother);
 		return;
 	}
-
 private:
 	TreeNode<T>* _root;
 };
