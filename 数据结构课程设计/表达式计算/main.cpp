@@ -28,7 +28,8 @@ int icp(char c) {
 	else { return -1; }
 }
 int main() {
-	Stack<char>stack_opt, stack_num;
+	Stack<char>stack_opt;
+	Stack<BinaryTreeNode<char>* >stack_numNode;
 	BinaryTree<char>tree_exp;
 	string infix_exp;
 	char opt, cnew;
@@ -41,8 +42,8 @@ int main() {
 	while (i != length - 1 || !stack_opt.empty()) {
 		if ('0' <= infix_exp[i] && '9' >= infix_exp[i]) {
 			//如果是操作数，直接存入数字栈
-			stack_num.Push(infix_exp[i++]);
-			//cout << *citer;
+			//stack_num.Push(infix_exp[i++]);
+			stack_numNode.Push(new BinaryTreeNode<char>(infix_exp[i++]));
 		}
 		else {
 			//如果是操作符，先看操作符栈顶元素，并判断优先级
@@ -56,29 +57,11 @@ int main() {
 				stack_opt.Pop(opt);
 				//以opt为顶点，stack_num外侧的两个为左右儿子建树
 				//#表示上一次运算的结果，若取出来的数为#的话，说明要长树
-				char leftchild, rightchild;
-				stack_num.Pop(rightchild);
-				stack_num.Pop(leftchild);
-				if (leftchild == '$'&&rightchild!='$') {
-					//如果左儿子是#，向右上方长树
-					tree_exp.UpRightGrow(opt, rightchild);
-					stack_num.Push('$');
-				}
-				else if (rightchild == '$'&&leftchild!='$') {
-					//如果右儿子是#，向左上方长树
-					tree_exp.UpLeftGrow(opt, leftchild);
-					stack_num.Push('$');
-				}
-				/*else if (leftchild == '$' && rightchild == '$') {
-					
-				}*/
-				else {
-					//都是纯数字，构建子树，并用#代表本次运算的结果子树
-					tree_exp.setRoot(opt);
-					tree_exp.InsertLeftChild(tree_exp.getRoot(), leftchild);
-					tree_exp.InsertRightChild(tree_exp.getRoot(), rightchild);
-					stack_num.Push('$');
-				}
+				BinaryTreeNode<char>* leftchild = NULL, * rightchild = NULL;
+				stack_numNode.Pop(rightchild);
+				stack_numNode.Pop(leftchild);
+				tree_exp.UpGrow(opt, leftchild, rightchild);
+				stack_numNode.Push(tree_exp.getRoot());
 			}
 			else {
 				//如果两者优先级相同，则退栈但不输出
@@ -89,15 +72,13 @@ int main() {
 				}
 			}
 		}
-		cout << "z";
 	}
 	//输出各种表达式
-	cout << stack_opt.empty() << endl;
-	cout << "前缀表达式：";
+	cout << "\n前缀表达式：";
 	tree_exp.preOrder(tree_exp.getRoot(), print);
-	cout << endl << "中缀表达式：";
+	cout << "\n中缀表达式：";
 	tree_exp.inOrder(tree_exp.getRoot(), print);
-	cout << endl << "后缀表达式：";
+	cout << "\n后缀表达式：";
 	tree_exp.postOrder(tree_exp.getRoot(), print);
 
 	return 0;
