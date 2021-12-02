@@ -1,5 +1,5 @@
 #include <iostream>
-#include<stdlib.h>
+//#include <stdlib.h>
 #include "MinSpanTree.hpp"
 
 using namespace std;
@@ -14,11 +14,10 @@ void PrintInterface() {
 		<< "**        5 --- 退出程序              **\n";
 }
 int main() {
-	
 	int operate_num;
-	LinkedGraph<int> graph;//邻接表图
-	MinSpanTree<int> minspantree;//最小生成树
-	PrintInterface();
+	LinkedGraph<int,char> graph;//邻接表图
+	MinSpanTree<int,char> minspantree;//最小生成树
+	PrintInterface();//打印提示词
 	while (true) {
 		cout << "请选择要进行的操作：";
 		cin >> operate_num;
@@ -33,28 +32,27 @@ int main() {
 				cin >> n;
 			}
 
-			bool b = 1;
 			for (int i = 0; i < n; i++) {
-				if (!graph.insertVertex(i)) { 
-					cout << "顶点"<<i<<"插入失败！\n"; 
-					b = 0;
+				cout << "请依次输入顶点名称：\n";
+				char name;
+				cin >> name;
+				if (!graph.insertVertex(name)) {
+					cout << i << "顶点" << name << " 插入失败！\n";
 				}
-			}
-			if (b) {
-				cout << "顶点0";
-				for (int i = 1; i < n; i++) {
-					cout << "、" << i;
-				}
-				cout << "插入成功！\n";
+				else { cout << "插入成功！\n"; }
 			}
 			cout << "操作1执行完毕！\n";
 
-			graph.insertEdge(1, 2, 7);
-			graph.insertEdge(0, 3, 11);
-			graph.insertEdge(0, 2, 18);
+			graph.insertEdge(0, 2, 1);
+			graph.insertEdge(0, 1, 6);
+			graph.insertEdge(0, 3, 5);
+			graph.insertEdge(1, 2, 5);
 			graph.insertEdge(2, 3, 5);
-			graph.insertEdge(0, 1, 8);
-			graph.insertEdge(1, 3, 12);
+			graph.insertEdge(1, 4, 3);
+			graph.insertEdge(2, 4, 6);
+			graph.insertEdge(5, 4, 6);
+			graph.insertEdge(5, 2, 4);
+			graph.insertEdge(5, 3, 2);
 
 		}
 		else if (operate_num == 2) {
@@ -62,7 +60,7 @@ int main() {
 			int v1, v2, w;
 			cin >> v1 >> v2 >> w;
 			while (v1 != -1 || v2 != -1 || w != -1) {
-				if (graph.insertEdge(v1, v2, w)) {cout << "插入成功！\n";}
+				if (graph.insertEdge(v1, v2, w)) { cout << "插入成功！\n"; }
 				else { cout << "插入失败，该边已存在！\n"; }
 				cin >> v1 >> v2 >> w;
 			}
@@ -76,8 +74,7 @@ int main() {
 		}
 		else if (operate_num == 4) {
 			//显示最小生成树
-			if (!minspantree.PrintMST()) { cout << "请先生成最小生成树！\n"; }
-			
+			if (!minspantree.PrintMST(graph)) { cout << "请先生成最小生成树！\n"; }
 		}
 		else if (operate_num == 5) {
 			//退出程序
@@ -87,33 +84,6 @@ int main() {
 			cout << "操作数输入有误，请重新输入\n";
 		}
 	}
-
-	/*for (int i = 0; i < 5; i++) {
-		graph.insertVertex(i);
-	}
-	cout << graph.insertEdge(0, 1, 1) << " ";
-	cout << graph.insertEdge(0, 3, 1) << " ";
-	cout << graph.insertEdge(1, 2, 1) << " ";
-	cout << graph.insertEdge(2, 3, 1) << " ";
-	cout << graph.insertEdge(3, 4, 1) << " ";
-	cout << graph.insertEdge(4, 0, 1) << " ";
-	cout << graph.insertEdge(4, 0, 1) << " ";
-	cout << graph.removeEdge(0, 4) << " ";
-	cout << graph.removeEdge(0, 4) << "\n";
-	cout << graph.insertEdge(4, 0, 1) << " ";
-	cout << graph.insertEdge(4, 0, 1) << " ";*/
-
-	//srand((unsigned)time(NULL));
-	//MinHeap<int> heap(100);
-	//for (int i = 0; i < 100; i++) {
-	//	heap.Insert(rand());
-	//}
-	//for (int i = 0; i < 110; i++) {
-	//	int x;
-	//	heap.RemoveMin(x);
-	//	cout << x << " ";
-	//}
-
 	system("pause");
 	return 0;
 }

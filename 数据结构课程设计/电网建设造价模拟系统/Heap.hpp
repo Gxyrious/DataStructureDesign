@@ -1,13 +1,12 @@
-#include <iostream>
-
+#pragma once
 using namespace std;
+/****
+* 对于结点i：
+* i = 0则i是根结点
+* i的父节点为(i - 1) / 2
+* i的左子女为2 * i + 1，右子女为2 * i + 2
+****/
 
-/*
-对于结点i
-i = 0则i是根结点
-i的父节点为(i - 1) / 2
-i的左子女为2 * i + 1，右子女为2 * i + 2
-*/
 template<class T>
 class MinHeap {
 public:
@@ -16,8 +15,9 @@ public:
 		_currentSize = 0;
 		_heap = new T[_maxSize];
 	}
-	~MinHeap() { delete[]_heap; }
+	~MinHeap() { delete[] _heap; }
 	bool Insert(const T& data) {
+		//插入元素data。插入成功返回true，失败返回false
 		if (_currentSize == _maxSize) { return false; }
 		_heap[_currentSize++] = data;
 		siftUp();
@@ -36,9 +36,8 @@ private:
 	T* _heap;
 	int _currentSize;
 	int _maxSize;
-	//从堆尾向上调整
 	void siftUp() {
-		//j是子，i是父
+		//从堆尾向上调整
 		int j = _currentSize - 1, i = (j - 1) / 2;
 		T temp = _heap[j];
 		while (j > 0) {
@@ -51,8 +50,8 @@ private:
 		}
 		_heap[j] = temp;
 	}
-	//从堆顶向下调整
 	void siftDown() {
+		//从堆顶向下调整
 		int i = 0, j = i * 2 + 1;
 		T temp = _heap[i];
 		while (j < _currentSize) {

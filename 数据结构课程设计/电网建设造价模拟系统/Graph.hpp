@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 
 using namespace std;
 const int DefaultSize = 10;
@@ -14,41 +13,45 @@ public:
 	int _secNode;
 	T _weight;
 	Edge<T>* _nextEdge;
-	bool operator!=(Edge<T>& R)const {
+	/*bool operator!=(Edge<T>& R)const {
 		return _secNode != R._secNode;
-	}
+	}*/
 };
 
 //结点定义
-template<class T>
+template<class T,class E>
 class Vertex {
 public:
 	Vertex() { _data = 0; _firstEdge = NULL; }
-	Vertex(T& data) :_data(data) {}
-	T _data;
+	Vertex(E& data) :_data(data) { _data = 0; _firstEdge = NULL; }
+	E _data;
 	Edge<T>* _firstEdge;
 };
 
 //邻接表的图定义
-template<class T>
+template<class T,class E>
 class LinkedGraph {
 public:
-	LinkedGraph(T dafaultValue = 0, int maxVertices = DefaultSize) {
+	int getMaxVertices()const { return _maxVertices; }//获取结点最大数
+	int getNumVertices()const { return _numVertices; }//获取当前结点数
+	int getNumEdges()const { return _numEdges; }//获取当前边的数目
+	T getDefaultValueOfEdge()const { return _defaultValue_T; }//获取默认边权值
+	E getDefaultValueOfVertex()const { return _defaultValue_E; }//获取默认结点数据
+	LinkedGraph(T dafaultValue_T = 0,E defaultValue_E=0, int maxVertices = DefaultSize) {
+		//构造函数，要求输入两种数据类型的默认值
 		if (maxVertices <= 1) { maxVertices = DefaultSize; }
-		_defaultValue = dafaultValue;
+		_defaultValue_T = dafaultValue_T;
+		_defaultValue_E = defaultValue_E;
 		_maxVertices = maxVertices;
 		_numVertices = 0;
 		_numEdges = 0;
-		_NodeTable = new Vertex<T>[_maxVertices];
+		_NodeTable = new Vertex<T,E>[_maxVertices];
 		for (int i = 0; i < _maxVertices; i++) {
 			_NodeTable[i]._firstEdge = NULL;
 		}
 	}
-	int getMaxVertices()const { return _maxVertices; }
-	int getNumVertices()const { return _numVertices; }
-	int getNumEdges()const { return _numEdges; }
-	T getDefaultValue()const { return _defaultValue; }
 	~LinkedGraph() {
+		//析构函数
 		/*
 		for (int i = 0; i < _numVertices; i++) {
 			Edge<T>* p = _NodeTable[i]._firstEdge;
@@ -61,24 +64,35 @@ public:
 		delete[]_NodeTable;
 		*/
 	}
-	T getValue(int i) {
+	E getVertexValue(int i)const {
+		//获取某个结点的值
 		if (i >= 0 && i < _numVertices) { return _NodeTable[i]._data; }
-		else { return _defaultValue; }
+		else { return _defaultValue_E; }
 	}
-	T getWeight(int v1, int v2) {
+	T getEdgeWeight(int v1, int v2)const {
+		//获取某条边的权值
 		if (v1 != -1 && v2 != -1) {
 			Edge<T>* p = _NodeTable[v1]._firstEdge;
 			while (p != NULL && p->_secNode != v2) { p = p->_nextEdge; }
 			if (p != NULL) { return p->_weight; }
 		}
-		return _defaultValue;
+		return _defaultValue_T;
 	}
-	bool insertVertex(const T& vertex) {
+	bool insertVertex(const E& vertex) {
+		//插入结点，数据为vertex
 		if (_numVertices == _maxVertices) { return false; }
+		for (int i = 0; i < _numVertices; i++) {
+			if (_NodeTable[i]._data == vertex) { return false; }
+		}
 		_NodeTable[_numVertices++]._data = vertex;
 		return true;
 	}
+	bool removeVertex(const E& vertex) {
+		//删除值为vertex的结点
+		return	removeVertex(getVertexPos(vertex));
+	}
 	bool removeVertex(int v) {
+		//删除第v个结点
 		if (_numVertices == 1 || v < 0 || v >= _numVertices) { return false; }
 		Edge<T>* p, * s, * t;
 		int i, k;
@@ -114,7 +128,8 @@ public:
 		}
 		return true;
 	}
-	bool insertEdge(int v1, int v2, T weight) {
+	bool insertEdge(int v1, int v2, const T& weight) {
+		//在v1和v2之间插入权值为weight的边，若边已存在则返回false
 		if (v1 >= 0 && v1 < _numVertices && v2 >= 0 && v2 < _numVertices) {
 			Edge<T>* q, * p = _NodeTable[v1]._firstEdge;
 			while (p != NULL && p->_secNode != v2) { p = p->_nextEdge; }
@@ -135,6 +150,7 @@ public:
 		return false;
 	}
 	bool removeEdge(int v1, int v2) {
+		//删除v1和v2之间的边，若不存在这条边则返回false
 		if (v1 != -1 && v2 != -1) {
 			Edge<T>* p = _NodeTable[v1]._firstEdge, * q = NULL, * s = p;
 			while (p != NULL && p->_secNode != v2) {
@@ -162,6 +178,7 @@ public:
 		return false;
 	}
 	int getFirstNeighbour(int v) {
+		//获取结点v引出的第一条边
 		if (v != -1) {//target vertex exists
 			Edge<T>* p = _NodeTable[v]._firstEdge;
 			if (p != NULL) { return p->_secNode; }
@@ -169,6 +186,7 @@ public:
 		return -1;
 	}
 	int getNextNeighbour(int v, int w) {
+		//获取结点v引出的边链表中，w的下一条边
 		if (v != -1) {
 			Edge<T>* p = _NodeTable[v]._firstEdge;
 			while (p != NULL && p->_secNode != w) { p = p->_nextEdge; }
@@ -178,8 +196,9 @@ public:
 		return -1;
 	}
 private:
-	Vertex<T>* _NodeTable;//各边链表的头结点
-	int getVertexPos(const T vertex) {
+	Vertex<T,E>* _NodeTable;//各边链表的头结点
+	int getVertexPos(const E& vertex) {
+		//获取数据为vertex的结点序号
 		for (int i = 0; i < _numVertices; i++) {
 			if (_NodeTable[i]._data == vertex) { return i; }
 		}
@@ -187,7 +206,8 @@ private:
 		return -1;
 	}
 
-	T _defaultValue;
+	T _defaultValue_T;
+	E _defaultValue_E;
 	int _maxVertices;
 	int _numEdges;
 	int _numVertices;

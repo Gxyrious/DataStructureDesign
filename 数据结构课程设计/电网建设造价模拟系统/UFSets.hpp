@@ -1,9 +1,6 @@
 #pragma once
-#include <iostream>
 
 using namespace std;
-
-//const int DefaultSize = 10;
 
 class UFSets {
 public:
@@ -17,8 +14,20 @@ public:
         while (parent[x] > 0) { x = parent[x]; }
         return x;
     }
-    bool Union(int root1,int root2) {
-        int r1 = Find(root1), r2 = Find(root2), temp;
+    int CollapsingFind(int x) {
+        //搜索并返回包含x的树的根，并压缩路径
+        int root;
+        for (root = x; parent[root] >= 0; root = parent[root]);
+        while (x != root) {
+            int temp = parent[x];
+            parent[x] = root;
+            x = temp;
+        }
+        return root;
+    }
+    bool Union(int x1,int x2) {
+        //合并结点x1与x2所在集合
+        int r1 = Find(x1), r2 = Find(x2), temp;
         if (r1 != r2) { temp = parent[r1] + parent[r2]; }
         else { return false; }
         if (parent[r2] < parent[r1]) {
@@ -30,16 +39,6 @@ public:
             parent[r1] = temp;//r1数目少，因此r1作为父指针
         }
         return true;
-    }
-    int CollapsingFind(int i) {
-        int root;
-        for (root = i; parent[root] >= 0; root = parent[root]);
-        while (i != root) {
-            int temp = parent[i];
-            parent[i] = root;
-            i = temp;
-        }
-        return root;
     }
 private:
     int size;//并查集大小
