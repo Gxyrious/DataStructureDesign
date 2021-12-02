@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+
 using namespace std;
 
 template <class T>
@@ -14,42 +15,48 @@ public:
 
 template <class T>
 class BST {
+
 public:
-	BSTNode<T>* _root;
-	BSTNode<T>* getRoot()const { return _root; }
-	BST() : _root(NULL) {}                        //构造一棵空树
+	BSTNode<T>*& getRoot() { return _root; }
+	int getNum() { return _number; }
+	BST() : _root(NULL), _number(0) {}//构造一棵空树
 	BST(const T x) { _root = new BSTNode<T>(x); } //构造根节点
+	~BST() { Clear(_root); }
+	//二叉搜索树的删除算法
+	bool Remove(const T& x) {return Remove(x, _root);}
+	//二叉搜索树的插入算法
+	bool Insert(const T& x) {	return Insert(x, _root);	}
 	//二叉搜索树的搜索算法
+	bool Search(const T x) {return Search(x, _root);}
+	void Clear() { Clear(_root); _root = NULL; }
+	void inOrder(void(*visit)(BSTNode<T>* p)) { 
+		if (_root == NULL) { cout << "the tree is empty!\n"; }
+		inOrder(_root, visit);
+	}
+private:
 	bool Search(const T x, BSTNode<T>* ptr) {
 		if (ptr == NULL) { return false; }
 		else if (x < ptr->_data) { return Search(x, ptr->_left); }
 		else if (x > ptr->_data) { return Search(x, ptr->_right); }
 		else { return true; }
 	}
-	// BSTNode<T> *Search(const T x, BSTNode<T> *ptr) {
-	// 	if (ptr == NULL) { return NULL; }
-	// 	else if (x < ptr->_data) { return Search(x, ptr->_left); }
-	// 	else if (x > ptr->_data) { return Search(x, ptr->_right); }
-	// 	else { return ptr; }
-	// }
 
-	//二叉搜索树的插入算法
 	bool Insert(const T& x, BSTNode<T>*& ptr) {
 		if (ptr == NULL) {
 			ptr = new BSTNode<T>(x);
+			_number++;
 			return true;
 		}
 		else if (x < ptr->_data) { return Insert(x, ptr->_left); }
 		else if (x > ptr->_data) { return Insert(x, ptr->_right); }
 		else { return false; }
 	}
-	//二叉搜索树的删除算法
+	
 	bool Remove(const T x, BSTNode<T>*& ptr) {
 		BSTNode<T>* temp;
 		if (ptr != NULL) {
 			if (x < ptr->_data) { return Remove(x, ptr->_left); }
 			else if (x > ptr->_data) { return Remove(x, ptr->_right); }
-			else if (x < ptr->_data) { return Remove(x, ptr->_right); }
 			else if (ptr->_left != NULL && ptr->_right != NULL) {
 				temp = ptr->_right;
 				while (temp->_left != NULL) { temp = temp->_left; }
@@ -62,24 +69,27 @@ public:
 				if (ptr->_left == NULL) { ptr = ptr->_right; }
 				else { ptr = ptr->_left; }
 				delete temp;
+				_number--;
 				return true;
 			}
 		}
 		return false;
 	}
+	void Clear(BSTNode<T>* ptr) {
+		if (ptr == NULL) { return; }
+		Clear(ptr->_left);
+		Clear(ptr->_right);
+		_number--;
+		delete ptr;
+	}
 	void inOrder(BSTNode<T>* ptr, void(*visit)(BSTNode<T>* p)) {
-		if (ptr) {
+		if (ptr!=NULL) {
 			inOrder(ptr->_left, visit);
 			visit(ptr);
 			inOrder(ptr->_right, visit);
 		}
 	}
-	void preOrder(BSTNode<T>* ptr, void(*visit)(BSTNode<T>* p)) {
-		if (ptr) {
-			preOrder(ptr->_left, visit);
-			preOrder(ptr->_right, visit);
-			visit(ptr);
-		}
-	}
-	~BST() {}
+private:
+	BSTNode<T>* _root;
+	int _number;
 };
