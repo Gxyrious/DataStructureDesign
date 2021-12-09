@@ -170,10 +170,38 @@ int MergeSort(int target[], int left, int right) {
 	return times;
 }
 int RadixSort(int target[]) {
-	int radix[32768], times = 0;
-	memset(radix, 0, sizeof(radix));
+	int times=0;
+	int maxNum = target[0];
 	for (int i = 0; i < MAX; i++) {
-			radix[target[i]]++;
+		if (maxNum < target[i]) {
+			maxNum = target[i];
+		}
+	}
+	int d = 1;
+	while(maxNum>=10){
+		maxNum /= 10;
+		d++;
+	}
+	//实际上此题中d就是5，因为我们知道随机生成的数的大小
+	int temp[MAX], count[10], radix = 1;
+	for (int i = 0; i < d; i++) {
+		//进行d次排序
+		for (int j = 0; j < 10; j++) { count[j] = 0; }
+		for (int j = 0; j < MAX; j++) {
+			int k = (target[j] / radix) % 10;
+			count[k]++;
+		}
+		for (int j = 1; j < 10; j++) {
+			count[j] += count[j - 1];
+		}
+		for (int j = MAX - 1; j >= 0; j--) {
+			int k = (target[j] / radix) % 10;
+			temp[--count[k]] = target[j];
+		}
+		for (int j = 0; j < MAX; j++) {
+			target[j] = temp[j];
+		}
+		radix *= 10;
 	}
 	return times;
 }
@@ -211,6 +239,7 @@ int main() {
 	TimeCalculating* heap_sort = new TimeCalculating(target, HeapSort);
 	cout << "HeapSort:" << heap_sort->getComparisionTimes() << " " << heap_sort->getRunningTime() << endl;
 
+	//归并排序
 	TimeCalculating* merge_sort = new TimeCalculating(target, MergeSort);
 	cout << "MergeSort:" << merge_sort->getComparisionTimes() << " " << merge_sort->getRunningTime() << endl;
 	delete merge_sort;

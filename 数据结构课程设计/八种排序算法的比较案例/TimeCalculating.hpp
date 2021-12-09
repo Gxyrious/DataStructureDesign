@@ -9,7 +9,6 @@ public:
 		for (int i = 0; i < MAX; i++) {
 			_target[i] = target[i];
 		}
-		//this->_pfun = pfun;
 		clock_t starttime = clock();
 		this->_comparison_times = (*pfun)(_target);
 		clock_t endtime = clock();
@@ -17,9 +16,7 @@ public:
 
 	}
 	TimeCalculating(int target[], int (*pfun)(int target[], int left, int right) = NULL) {
-		for (int i = 0; i < MAX; i++) {
-			_target[i] = target[i];
-		}
+		for (int i = 0; i < MAX; i++) { _target[i] = target[i]; }
 		clock_t starttime = clock();
 		this->_comparison_times = (*pfun)(_target, 0, MAX - 1);
 		clock_t endtime = clock();
@@ -37,7 +34,6 @@ public:
 		}
 	}
 private:
-	//int (*_pfun)(int target[]);
 	int _target[MAX], _comparison_times;
 	double _running_time;
 };
