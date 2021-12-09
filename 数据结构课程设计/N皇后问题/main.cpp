@@ -1,11 +1,12 @@
-#include<iostream>
+#include <iostream>
+#include <string.h>
 
 using namespace std;
 
-const int maxn = 100;//最大棋盘为100 * 100
+const int maxn = 16;//最大棋盘为15 * 15
 int N, location[maxn];
 unsigned long long sum = 0;
-bool column[maxn], main_diagonal[maxn], sub_diagonal[maxn];
+bool column[maxn], main_diagonal[2 * maxn], sub_diagonal[2 * maxn], p = true;
 
 /***
 * maxn表示最大棋盘为100 * 100（为了简化处理此处不采用动态申请数组的方式）
@@ -21,7 +22,6 @@ bool column[maxn], main_diagonal[maxn], sub_diagonal[maxn];
 
 //输出函数
 void print() {
-	sum++;//先将总方案数加一
 	for (int i = 1; i <= N; i++) {
 		for (int j = 1; j <= N; j++) {
 			//准备输出一个N * N矩阵
@@ -41,7 +41,9 @@ void print() {
 void search(int i) {
 	//若已经找到了第N + 1行，则输出
 	if (i == N + 1) {
-		print();
+		if (p) { print(); }
+		sum++;
+		return;
 	}
 	for (int j = 1; j <= N; j++) {
 		//对于当前的第i行，去遍历列
@@ -68,8 +70,14 @@ int main() {
 	memset(column, false, sizeof(column));
 	memset(sub_diagonal, false, sizeof(sub_diagonal));
 	memset(main_diagonal, false, sizeof(main_diagonal));
-	cout << "请输入棋盘大小（一个正整数）：\n";
+	cout << "请输入棋盘大小（一个4~15的正整数）：\n";
 	cin >> N;//输入棋盘大小
+	while (N < 1 || N > 15) {
+		cout << "输入的N不合法，请重新输入！\n";
+		cin >> N;
+	}
+	cout << "请选择是否要打印棋盘，1为打印，0为不打印：\n";
+	cin >> p;
 	search(1);//从第一行开始找
 	cout << "sum=" << sum << endl;
 	return 0;
