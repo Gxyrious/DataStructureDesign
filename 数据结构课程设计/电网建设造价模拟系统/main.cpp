@@ -1,5 +1,4 @@
 #include <iostream>
-//#include <stdlib.h>
 #include "MinSpanTree.hpp"
 
 using namespace std;
@@ -10,73 +9,93 @@ void PrintInterface() {
 		<< "**        1 --- 创建电网顶点          **\n"
 		<< "**        2 --- 添加电网的边          **\n"
 		<< "**        3 --- 构造最小生成树        **\n"
-		<< "**        4 --- 显示最小生成树        **\n"
-		<< "**        5 --- 退出程序              **\n";
+		<< "**        4 --- 删除边                **\n"
+		<< "**        5 --- 删除顶点              **\n"
+		<< "**        6 --- 添加边                **\n"
+		<< "**        7 --- 添加顶点              **\n"
+		<< "**        8 --- 退出程序              **\n";
 }
 int main() {
 	int operate_num;
-	LinkedGraph<int,char> graph;//邻接表图
-	MinSpanTree<int,char> minspantree;//最小生成树
+	LinkedGraph<int, char> graph(-1,'\0');//邻接表图
+	MinSpanTree<int, char> minspantree;//最小生成树
 	PrintInterface();//打印提示词
 	while (true) {
 		cout << "请选择要进行的操作：";
 		cin >> operate_num;
-		cout << "\n";
-
 		if (operate_num == 1) {
 			cout << "请输入要插入的顶点的个数：";
 			int n;
 			cin >> n;
-			while (n <= 1 || n > graph.getMaxVertices()) {
+			while (n < 1 || n > graph.getMaxVertices()) {
 				cout << "输入有误，请重新输入！\n";
 				cin >> n;
 			}
-
-			for (int i = 0; i < n; i++) {
-				cout << "请依次输入顶点名称：\n";
+			cout << "请依次输入顶点名称：\n";
+			bool flag = 1;
+			for (int i = 1; i <= n; i++) {
 				char name;
 				cin >> name;
 				if (!graph.insertVertex(name)) {
-					cout << i << "顶点" << name << " 插入失败！\n";
+					cout << i << "号顶点" << name << "插入失败！\n";
+					flag = 0;
 				}
-				else { cout << "插入成功！\n"; }
 			}
+			if (flag) { cout << "插入成功！"; }
 			cout << "操作1执行完毕！\n";
-
-			graph.insertEdge(0, 2, 1);
-			graph.insertEdge(0, 1, 6);
-			graph.insertEdge(0, 3, 5);
-			graph.insertEdge(1, 2, 5);
-			graph.insertEdge(2, 3, 5);
-			graph.insertEdge(1, 4, 3);
-			graph.insertEdge(2, 4, 6);
-			graph.insertEdge(5, 4, 6);
-			graph.insertEdge(5, 2, 4);
-			graph.insertEdge(5, 3, 2);
-
 		}
 		else if (operate_num == 2) {
-			cout << "请输入两个顶点及边的权重，输入-1 -1 -1结束插入：\n";
-			int v1, v2, w;
-			cin >> v1 >> v2 >> w;
-			while (v1 != -1 || v2 != -1 || w != -1) {
-				if (graph.insertEdge(v1, v2, w)) { cout << "插入成功！\n"; }
+			cout << "请输入两个顶点的值及边的权重，输入0 0 0结束插入：\n";
+			char v1, v2;
+			int weight;
+			cin >> v1 >> v2 >> weight;
+			while (v1 != '0' || v2 != '0' || weight != 0) {
+				if (graph.insertEdge(v1, v2, weight)) { cout << "插入成功！\n"; }
 				else { cout << "插入失败，该边已存在！\n"; }
-				cin >> v1 >> v2 >> w;
+				cin >> v1 >> v2 >> weight;
 			}
 			cout << "操作2执行完毕！\n";
 		}
 		else if (operate_num == 3) {
 			//构造最小生成树
 			minspantree.initSize(graph.getNumVertices());
-			if (minspantree.Kruskal(graph)) { cout << "最小生成树构造成功！\n"; }
+			if (minspantree.createMinSpanTree(graph)) { cout << "最小生成树构造成功！打印如上\n"; }
 			else { cout << "最小生成树构造失败，图不连通！\n"; }
 		}
 		else if (operate_num == 4) {
-			//显示最小生成树
-			if (!minspantree.PrintMST(graph)) { cout << "请先生成最小生成树！\n"; }
+			//删除边
+			cout << "请输入要删除的边的两个顶点值\n";
+			char v1, v2;
+			cin >> v1 >> v2;
+			if (graph.removeEdge(v1, v2)) { cout << "删除成功！\n"; }
+			else { cout << "删除失败，该边不存在！\n"; }
 		}
 		else if (operate_num == 5) {
+			//删除顶点
+			cout << "请输入要删除的顶点值\n";
+			char v;
+			cin >> v;
+			if (graph.removeVertex(v)) { cout << "删除成功！\n"; }
+			else { cout << "删除失败，该顶点不存在！\n"; }
+		}
+		else if (operate_num == 6) {
+			//添加边
+			cout << "请输入要添加的边的两个顶点名称，以及边的权值\n";
+			char v1, v2;
+			int weight;
+			cin >> v1 >> v2 >> weight;
+			if (graph.insertEdge(v1, v2, weight)) { cout << "添加成功！\n"; }
+			else { cout << "添加失败，顶点不存在！\n"; }
+		}
+		else if (operate_num == 7) {
+			//添加结点
+			cout << "请输入要添加的结点的值\n";
+			char v;
+			cin >> v;
+			if (graph.insertVertex(v)) { cout << "添加成功！\n"; }
+			else { cout << "插入失败，请检查图是否已满或添加值已经存在！\n"; }
+		}
+		else if (operate_num == 8) {
 			//退出程序
 			break;
 		}

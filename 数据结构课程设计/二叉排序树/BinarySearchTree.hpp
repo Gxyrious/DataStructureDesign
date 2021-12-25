@@ -28,21 +28,29 @@ public:
 	bool Insert(const T& x) {	return Insert(x, _root);	}
 	//二叉搜索树的搜索算法
 	bool Search(const T x) {return Search(x, _root);}
+	//二叉搜索树的清空算法
 	void Clear() { Clear(_root); _root = NULL; }
-	void inOrder(void(*visit)(BSTNode<T>* p)) { 
+	//二叉搜索树的中序遍历算法
+	void inOrder(void(*visit)(BSTNode<T>* p)) {
 		if (_root == NULL) { cout << "the tree is empty!\n"; }
 		inOrder(_root, visit);
 	}
 private:
 	bool Search(const T x, BSTNode<T>* ptr) {
+		//先判断当前结点是否为空
 		if (ptr == NULL) { return false; }
+		//若x小于当前结点，则在左子树中搜索
 		else if (x < ptr->_data) { return Search(x, ptr->_left); }
+		//若x大于当前结点，则在右子树中搜索
 		else if (x > ptr->_data) { return Search(x, ptr->_right); }
+		//此时x == ptr->_data，成功找到了该元素
 		else { return true; }
 	}
 
 	bool Insert(const T& x, BSTNode<T>*& ptr) {
 		if (ptr == NULL) {
+			//若ptr为空，说明已经之前已经遍历到某个叶子结点
+			//ptr为该叶子结点的子女指针的引用
 			ptr = new BSTNode<T>(x);
 			_number++;
 			return true;
@@ -58,13 +66,16 @@ private:
 			if (x < ptr->_data) { return Remove(x, ptr->_left); }
 			else if (x > ptr->_data) { return Remove(x, ptr->_right); }
 			else if (ptr->_left != NULL && ptr->_right != NULL) {
+				//若ptr的两个子女都不为空
+				//将其中序遍历的后一个，也即右子树中最靠左下的元素与当前结点交换
+				//并改为删除右子树中的对应结点
 				temp = ptr->_right;
 				while (temp->_left != NULL) { temp = temp->_left; }
 				ptr->_data = temp->_data;
 				Remove(ptr->_data, ptr->_right);
 			}
 			else {
-				//ptr即为需要删除的结点
+				//若ptr的子女有一个为空，则将不为空的子女顶替父结点即可
 				temp = ptr;
 				if (ptr->_left == NULL) { ptr = ptr->_right; }
 				else { ptr = ptr->_left; }
@@ -75,6 +86,7 @@ private:
 		}
 		return false;
 	}
+	//清空整个树
 	void Clear(BSTNode<T>* ptr) {
 		if (ptr == NULL) { return; }
 		Clear(ptr->_left);

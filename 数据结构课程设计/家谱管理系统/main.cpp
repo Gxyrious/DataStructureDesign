@@ -11,7 +11,7 @@ void PrintInterface() {
 		<< "A：组建新的家庭（需包含新的父或母以及它们的若干子女）\n"
 		<< "B：添加子女（需给定添加子女的父或母）\n"
 		<< "C：解散家庭（删除它及其所有子孙）\n"
-		<< "D：更改姓名（需给定原来的姓名）"
+		<< "D：更改姓名（需给定原来的姓名）\n"
 		<< "P：前序遍历打印家族成员\n"
 		<< "E：退出程序\n";
 }
@@ -22,7 +22,7 @@ int main() {
 	cout << "请输入祖先的姓名：";
 	string ancestor;
 	cin >> ancestor;
-	family_tree.setRoot(ancestor);
+	family_tree.setRoot(ancestor);//设置家谱树的根结点
 	cout << "此家谱的祖先是：" << family_tree.getRoot()->_data << endl;
 	PrintInterface();
 	while (true) {
@@ -158,5 +158,6 @@ int main() {
 			cout << "请输入正确的操作代码" << endl;
 		}
 	}
+	system("pause");
 	return 0;
 }

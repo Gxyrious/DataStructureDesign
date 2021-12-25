@@ -1,7 +1,6 @@
 #include "StudentManager.h"
 
-void StudentManager::PrintInterFace()
-{
+void StudentManager::PrintInterFace() {
 	cout << "----------------------" << endl
 		<< "|请输入操作数，如下： |" << endl
 		<< "|0退出       1添加    |" << endl
@@ -10,8 +9,7 @@ void StudentManager::PrintInterFace()
 		<< "-----------------------" << endl;
 }
 
-void StudentManager::createSystem()
-{
+void StudentManager::createSystem() {
 	cout << "首先请建立考生信息系统！" << endl
 		<< "请输入要添加的考生个数：" << endl;
 	int n;
@@ -47,8 +45,7 @@ void StudentManager::createSystem()
 	cout << "建立成功！" << endl;
 }
 
-void StudentManager::insertStudent()
-{
+void StudentManager::insertStudent() {
 	cout << "请输入要添加的考生个数" << endl;
 	int n;
 	cin >> n;
@@ -79,8 +76,7 @@ void StudentManager::insertStudent()
 	}
 }
 
-void StudentManager::pollStudent()
-{
+void StudentManager::pollStudent() {
 	cout << "请输入需要查询的考生编号：" << endl;
 	int id;
 	cin >> id;
@@ -93,8 +89,7 @@ void StudentManager::pollStudent()
 	}
 }
 
-void StudentManager::modifyStudent()
-{
+void StudentManager::modifyStudent() {
 	cout << "请输入要修改的考生编号：" << endl;
 	int id;
 	cin >> id;
@@ -111,8 +106,7 @@ void StudentManager::modifyStudent()
 	}
 }
 
-void StudentManager::removeStudent()
-{
+void StudentManager::removeStudent() {
 	cout << "请输入要删除的考生编号：" << endl;
 	int id;
 	cin >> id;
@@ -126,8 +120,7 @@ void StudentManager::removeStudent()
 	}
 }
 
-void StudentManager::printStudent()
-{
+void StudentManager::printStudent() {
 	LinkNode<Student>* cur = stuList.getHead()->_next;
 	//若附加头结点指向NULL，则说明考生信息系统为空
 	if (!cur) {
@@ -141,8 +134,7 @@ void StudentManager::printStudent()
 	}
 }
 
-void StudentManager::updateStudentId()
-{
+void StudentManager::updateStudentId() {
 	//遍历一遍链表，按序修改编号
 	LinkNode<Student>* iter = stuList.getHead()->_next;
 	int id = 1;
@@ -152,35 +144,19 @@ void StudentManager::updateStudentId()
 	}
 }
 
-void StudentManager::run()
-{
+void StudentManager::run() {
 	createSystem();
 	int opeNum;
 	do {
 		PrintInterFace();
 		cin >> opeNum;
-		if (opeNum == 1) {
-			insertStudent();
-		}
-		else if (opeNum == 2) {
-			pollStudent();
-		}
-		else if (opeNum == 3) {
-			modifyStudent();
-		}
-		else if (opeNum == 4) {
-			removeStudent();
-		}
-		else if (opeNum == 5) {
-			printStudent();
-		}
-		else if (opeNum == 0) {
-			break;
-		}
-		else {
-			cout << "操作码不存在，请重新输入！" << endl;
-			continue;
-		}
+		if (opeNum == 1) { insertStudent(); }
+		else if (opeNum == 2) { pollStudent(); }
+		else if (opeNum == 3) { modifyStudent(); }
+		else if (opeNum == 4) { removeStudent(); }
+		else if (opeNum == 5) { printStudent(); }
+		else if (opeNum == 0) { break; }
+		else { cout << "操作码不存在，请重新输入！" << endl; continue; }
 		updateStudentId();
 	} while (true);
 }

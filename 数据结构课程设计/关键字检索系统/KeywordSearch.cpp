@@ -1,7 +1,6 @@
 #include"KeywordSearch.h"
 
-KeywordSearch::KeywordSearch(const string& keyword, const string& filename)
-{
+KeywordSearch::KeywordSearch(const string& keyword, const string& filename) {
 	_count = -1;
 	_keyword = keyword;
 	_filename = filename;
@@ -9,13 +8,11 @@ KeywordSearch::KeywordSearch(const string& keyword, const string& filename)
 	_fin.seekg(ios::beg);//将文件标识符设置在begin位置
 }
 
-KeywordSearch::~KeywordSearch()
-{
+KeywordSearch::~KeywordSearch() {
 	_fin.close();
 }
 
-int KeywordSearch::getCount()
-{
+int KeywordSearch::getCount() {
 	//_count!=-1时说明已查找过，直接返回_count
 	if (_count == -1) {
 		_count = 0;

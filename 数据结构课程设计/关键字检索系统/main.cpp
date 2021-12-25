@@ -15,6 +15,7 @@ int main() {
 	transform(keyword.begin(), keyword.end(), keyword.begin(), std::tolower);//全部转为小写
 
 	KeywordSearch kwSearch(keyword, init_file.getFilename());
-	cout << kwSearch.getCount();
+	cout << "出现次数为：" << kwSearch.getCount() << "\n";
+	system("pause");
 	return 0;
 }

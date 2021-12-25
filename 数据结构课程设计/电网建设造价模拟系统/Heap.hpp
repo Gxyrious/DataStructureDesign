@@ -1,5 +1,6 @@
 #pragma once
 using namespace std;
+
 /****
 * 对于结点i：
 * i = 0则i是根结点
@@ -15,7 +16,9 @@ public:
 		_currentSize = 0;
 		_heap = new T[_maxSize];
 	}
-	~MinHeap() { delete[] _heap; }
+	~MinHeap() { 
+		//delete[] _heap; 
+	}
 	bool Insert(const T& data) {
 		//插入元素data。插入成功返回true，失败返回false
 		if (_currentSize == _maxSize) { return false; }

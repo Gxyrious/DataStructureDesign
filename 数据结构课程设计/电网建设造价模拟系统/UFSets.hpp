@@ -11,7 +11,7 @@ public:
     }
     int Find(int x) {
         //搜索并返回包含x的树的根
-        while (parent[x] > 0) { x = parent[x]; }
+        while (parent[x] >= 0) { x = parent[x]; }
         return x;
     }
     int CollapsingFind(int x) {

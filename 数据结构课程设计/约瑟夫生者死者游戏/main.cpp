@@ -4,6 +4,11 @@ int main() {
 	CircList<int> circlist;
 	CircLinkNode<int>* pre;
 	int N, S, M, K;
+	cout << "请依次输入四个整数，"
+		<< "分别为总人数N，"
+		<< "第一个报数的人S，"
+		<< "每数到第M个人就让其出列，"
+		<< "直至剩下K个人为止。\n";
 	cin >> N >> S >> M >> K;
 
 	//依次插入N个人
@@ -20,11 +25,13 @@ int main() {
 		for (int j = 1; j < M; j++) {
 			pre = circlist.Next(pre);
 		}
-		cout << "第" << i << "个：" << pre->_next->_data << endl;
+		cout << "第" << i << "个：" <<circlist.Next(pre)->_data << endl;
 		circlist.Remove(pre);
 	}
 	//输出剩下的人的编号
 	cout << "剩下的人编号：";
 	circlist.PrintList();
+	cout << "\n";
+	system("pause");
 	return 0;
 }

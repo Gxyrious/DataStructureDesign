@@ -7,6 +7,7 @@ using namespace std;
 
 BST<int> binary_search_tree;
 
+//打印菜单
 void PrintInterface() {
 	cout << "********           Binary Search Tree           ********\n"
 		<< "========================================================\n"
@@ -21,9 +22,9 @@ void PrintInterface() {
 }
 
 int main() {
+	//随机数种子
 	srand((unsigned)time(NULL));
-	BSTNode<int>* nonconst_root = binary_search_tree.getRoot();
-	int operate_number;
+	int operate_number;//操作数
 	PrintInterface();
 	while (true) {
 		cin >> operate_number;
@@ -31,6 +32,7 @@ int main() {
 			cout << "please input the number of elements to insert......\n";
 			//输入插入元素个数
 			int n;
+			//输入判断
 			while (true) {
 				cin >> n;
 				if (n <= 0) { cout << "input number is illegal, please reinput again!\n"; }
@@ -42,9 +44,9 @@ int main() {
 				int insert_number;
 				cin >> insert_number;
 				if (!binary_search_tree.Insert(insert_number)) {
+					//元素已经存在，则不进行插入
 					cout << "number" << insert_number << "failed to insert!\n";
 					ifSuccess = false;
-					break;
 				}
 			}
 			if (ifSuccess) { cout << "insert successfully!\n"; }
@@ -60,12 +62,12 @@ int main() {
 			bool ifSuccess = true;
 			for (int i = 0; i < n; i++) {
 				if (!binary_search_tree.Insert(rand())) {
-					cout << "failed to insert!\n";
+					cout << "Number "<<i<<" failed to insert!\n";
 					ifSuccess = false;
-					break;
 				}
 			}
 			if (ifSuccess) {
+				//存在元素没有被插入
 				cout << "insert successfully!\n";
 			}
 		}
@@ -73,6 +75,7 @@ int main() {
 			cout << "please input the target element to delete......\n";
 			int target;
 			cin >> target;
+			//被删元素不存在
 			if (binary_search_tree.Remove(target)) { cout << "remove successfully!\n"; }
 			else { cout << "failed to remove!\n"; }
 		}
@@ -80,16 +83,19 @@ int main() {
 			cout << "please input the target element to search......\n";
 			int target;
 			cin >> target;
+			//寻找是否存在该元素
 			if (binary_search_tree.Search(target)) { cout << "target exists!\n"; }
 			else { cout << "target not exists!\n"; }
 		}
 		else if (operate_number == 5) {
+			//中序遍历打印二叉搜索树
 			binary_search_tree.inOrder([](BSTNode<int>* p) -> void {
 				cout << p->_data << " ";
 				});
 			cout << "\n";
 		}
 		else if (operate_number == 6) {
+			//清空二叉树
 			binary_search_tree.Clear();
 			cout << "clear successfully!\n";
 		}
